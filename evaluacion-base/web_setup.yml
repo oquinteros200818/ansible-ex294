@@ -1,0 +1,27 @@
+---
+- name: Creación de usuarios
+  hosts: webservers
+  become: true
+
+  tasks:
+    - name: Tarea para crear el usuario 'web_monitor'
+      ansible.biultin.user:
+        name: web_monitor
+        state: present
+
+    - name: Creación de archivo en el directorio /etc
+      ansible.builtin.copy:
+        src: "Servidor administrado por Ansible"
+        dest: /etc/httpd_message.txt
+      notify: 
+        - reiniciar_sshd 
+
+  handlers:
+    - name: reiniciar_sshd
+      ansible.builtin.service:
+        name: sshd
+        state: restart
+
+
+
+
