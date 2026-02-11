@@ -1,0 +1,17 @@
+[proxy]
+node1 ansible_host=192.168.124.72 
+ 
+[webservers]
+node2 ansible_host=192.168.124.73
+node3 ansible_host=192.168.124.74
+
+[database]
+node3 ansible_host=192.168.124.74
+
+[database:vars]
+db_port=5432
+
+
+[public:children]
+proxy
+webservers
