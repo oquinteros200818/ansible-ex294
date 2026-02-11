@@ -11,7 +11,7 @@
 
     - name: Creación de archivo en el directorio /etc
       ansible.builtin.copy:
-        src: "Servidor administrado por Ansible"
+        content: "Servidor administrado por Ansible"
         dest: /etc/httpd_message.txt
       notify: 
         - reiniciar_sshd 
