@@ -5,7 +5,7 @@
 
   tasks:
     - name: Tarea para crear el usuario 'web_monitor'
-      ansible.biultin.user:
+      ansible.builtin.user:
         name: web_monitor
         state: present
 
