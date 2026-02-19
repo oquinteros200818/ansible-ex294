@@ -13,6 +13,11 @@
         password: "{{ user_password | password_hash('sha512') }}"
         state: present 
 
+    - name: Crear grupo requerdio
+      ansible_builtin_group:
+        name: admin_audit
+        state: present
+
     - name: Crear archivo
       ansible.builtin.copy:
         content: 'Acceso para admin_audit protegido'

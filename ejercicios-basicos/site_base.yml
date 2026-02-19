@@ -1,0 +1,36 @@
+---
+- name: Playbook que resuelve tareas básicas de administración
+  hosts: public
+  become: true 
+
+  tasks:
+    - name: Instalación de paquetes en la última versión
+      ansible.builtin.dnf:
+        name: 
+          - vim
+          - tar
+        state: latest
+
+    - name: Crear un grupo de sistema 'automation_ops'
+      ansible.builtin.group:
+        name: automation_ops
+        state: present
+
+    - name: Creación de usuario 'deployer'
+      ansible.builtin.user:
+        name: deployer
+        comment: Este es un usuario del equipo de Desarrollo
+        group: automation_ops
+
+    - name: Asegurar que el servicio de firewall se encuentre iniciado y activo
+      ansible.builtin.service:
+        name: firewalld
+        state: started
+        enabled: yes 
+
+    - name: Creación de un archivo vacío
+      ansible.builtin.file:
+        path: /etc/issue.net
+        state: touch
+
+

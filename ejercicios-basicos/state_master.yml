@@ -1,0 +1,39 @@
+---
+- name: Playbook para identificar bien el uso de state 
+  hosts: node2
+  become: true
+
+  tasks:
+    - name: Revisar si un paquete está instalado 'php'
+      ansible.builtin.dnf:
+        name: php
+        state: present
+
+    - name: Creación de directorio
+      ansible.builtin.file:
+        path: /opt/web_data
+        state: directory
+        mode: '0755'
+
+    - name: Eliminar archivo
+      ansible.builtin.file:
+        path: /tmp/old_config.txt
+        state: absent
+
+    - name: Configuración de servicios
+      ansible.builtin.service:
+        name: httpd
+        state: stopped
+        enabled: false
+
+    - name: Crear un usuario
+      ansible.builtin.user: 
+        name: temp_user
+        comment: Este es un usuario del ambiente de QA
+
+    - name: Eliminar usuario
+      ansible.builtin.user:
+        name: deployer
+        state: absent
+        remove: yes 
+

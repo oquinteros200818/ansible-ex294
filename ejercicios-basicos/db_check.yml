@@ -1,0 +1,9 @@
+---
+- name: Playbok que verifica el paso de variables
+  hosts: database
+
+  tasks:
+    - name: Copiar contenido en el directorio '/tmp/db_config.txt'
+      ansible.builtin.copy:
+        content: 'El puerto de la base de datos es: {{ db_port }}'
+        dest: /tmp/db_config.txt
