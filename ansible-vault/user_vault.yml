@@ -1,0 +1,25 @@
+---
+- name: Playbook que usa ansible-vault
+  hosts: webservers
+  become: true
+
+  vars_files: 
+    - secrets.yml
+  
+  tasks:
+    - name: Crear un usuario llamado 'admin_audit'
+      ansible.builtin.user:
+        name: admin_audit
+        password: "{{ user_password | password_hash('sha512') }}"
+        state: present 
+
+    - name: Crear archivo
+      ansible.builtin.copy:
+        content: 'Acceso para admin_audit protegido'
+        dest: /etc/audit_config.txt
+        owner: admin_audit
+        group: admin_vault
+        mode: '0600'
+
+
+        
