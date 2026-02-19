@@ -23,7 +23,7 @@
         content: 'Acceso para admin_audit protegido'
         dest: /etc/audit_config.txt
         owner: admin_audit
-        group: admin_vault
+        group: admin_audit
         mode: '0600'
 
 
