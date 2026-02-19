@@ -14,7 +14,7 @@
         state: present 
 
     - name: Crear grupo requerdio
-      ansible_builtin_group:
+      ansible.builtin.group:
         name: admin_audit
         state: present
 
