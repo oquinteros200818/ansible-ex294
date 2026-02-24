@@ -1,0 +1,14 @@
+---
+- name: Usando Templates para el uso de mensajes personalizados
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Play que ejecuta un template para mensajes personalizados
+      ansible.builtin.template:
+        src: motd.j2
+        dest: /etc/motd
+        owner: root
+        group: root
+        mode: '0644'
+
