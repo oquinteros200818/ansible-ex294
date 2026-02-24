@@ -1,0 +1,30 @@
+---
+- name: Playbook para el manejo de Loops y Condiciones
+  hosts: webservers
+  become: true 
+
+  tasks:
+    - name: Instalación de Paquetes usando un loop 
+      ansible.builtin.dnf:
+        name: "{{ item }}"
+      loop: 
+        - wget
+        - curl
+        - git
+
+    - name: Creación de usuarios dinámicos usando loops
+      ansible.builtin.user:
+        name: "{{ item.name }}"
+        comment: "{{ item.comment }}" 
+      loop:
+        - { name: 'devel_1', comment: 'Developer Team A' }
+        - { name: 'devel_2', comment: 'Developer Team B' }
+
+    - name: Play de restricciones de Seguridad
+      ansible.builtin.copy:
+        content: 'Este es un nodo Red Hat'
+        dest: /tmp/redhat_only.txt
+      when: ansible_facts['os_family'] == "RedHat"
+
+
+
