@@ -1,0 +1,18 @@
+---
+- name: Instalar servicio de apache
+  ansible.builtin.dnf:
+    name: httpd
+    state: latest
+
+- name: Play para habilitar e iniciar el servicio Httpd
+  ansible.builtin.service:
+    name: httpd
+    state: started
+    enabled: true 
+
+- name: Play para usar un template
+  ansible.builtin.template:
+    src: index.html.j2
+    dest: /var/www/html/index.html 
+
+
