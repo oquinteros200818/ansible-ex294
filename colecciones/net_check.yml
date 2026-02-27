@@ -1,0 +1,16 @@
+---
+- name: Manejo de Errores 
+  hosts: node1
+  become: true
+
+  tasks:
+    - name: Ejecución de commando ping
+      ansible.builtin.command: ping -c 3 8.8.8.8
+      ignore_errors: true
+
+
+    - name: Registrar que la revisión se registró
+      ansible.builtin.file:
+        path: /tmp/check_done.txt
+        state: touch
+      
