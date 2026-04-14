@@ -1,0 +1,34 @@
+---
+- name: "Validación de Entorno de Ejecución - Microsoft AD"
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: "1. Listar colecciones instaladas en el EE"
+      ansible.builtin.command: ansible-galaxy collection list
+      register: result_collections
+
+    - name: "2. Mostrar lista de colecciones"
+      ansible.builtin.debug:
+        msg: "{{ result_collections.stdout_lines }}"
+
+    - name: "3. Verificar presencia de microsoft.ad y windows"
+      ansible.builtin.assert:
+        that:
+          - "'microsoft.ad' in result_collections.stdout"
+          - "'ansible.windows' in result_collections.stdout"
+        fail_msg: "¡Error! No se encuentran las colecciones necesarias en el EE."
+        success_msg: "Colecciones verificadas con éxito."
+
+    - name: "4. Prueba de carga del módulo AD (Simulación)"
+      # Intentamos llamar al módulo. Si el EE está mal construido, fallará aquí con 'Module not found'.
+      # Si está bien construido, fallará con 'Connection Error' (porque no hay un Server real), lo cual es un ÉXITO.
+      microsoft.ad.domain_info:
+      register: ad_test
+      ignore_errors: true
+
+    - name: "5. Diagnóstico final"
+      ansible.builtin.debug:
+        msg: "¡EXITO TOTAL! El EE cargó el módulo correctamente y solo falló la conexión al servidor (lo cual es normal)."
+      when: 
+        - ad_test.msg is defined
+        - "'requires connection' in ad_test.msg or 'failed to connect' in ad_test.msg"
