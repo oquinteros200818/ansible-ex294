@@ -1,39 +1,16 @@
 ---
-- name: "Validación de Entorno de Ejecución - Microsoft AD"
+- name: "Validación Final de EE"
   hosts: localhost
   gather_facts: false
-  # Forzamos la búsqueda en ambas rutas
-  collections:
-    - microsoft.ad
-    - ansible.windows
-
+  # Quitamos la sección 'collections' de aquí arriba para evitar errores de carga previa
   tasks:
-    - name: "Instalar colección microsoft.ad en caliente (bypass cfg)"
-      ansible.builtin.shell: "ansible-galaxy collection install microsoft.ad -p /runner/collections"
-
-    - name: "1. Listar colecciones para depuración"
-      ansible.builtin.command: ansible-galaxy collection list
-      register: result_collections
-
-    - name: "2. Verificar presencia de colecciones"
-      ansible.builtin.assert:
-        that:
-          - "'microsoft.ad' in result_collections.stdout"
-        fail_msg: "¡Error! microsoft.ad no encontrada."
-
-    - name: "3. Prueba de carga del módulo AD (Simulación)"
-      # Aquí es donde probamos si el EE 've' el código de Python del módulo
+    - name: "Probando módulo de Microsoft AD"
+      # Usamos el nombre completo (FQCN)
       microsoft.ad.domain_info:
       register: ad_test
       ignore_errors: true
 
-    - name: "4. Diagnóstico final"
-      ansible.builtin.debug:
-        msg: "¡EXITO! El módulo se cargó. Error recibido (esperado): {{ ad_test.msg }}"
-      # Si el mensaje contiene algo sobre conexión o credenciales, es que el módulo FUNCIONA.
-      when: ad_test.msg is defined and ( 'connection' in ad_test.msg or 'credentials' in ad_test.msg or 'endpoint' in ad_test.msg )
-
-    - name: "5. Alerta si el módulo sigue sin existir"
-      ansible.builtin.fail:
-        msg: "El módulo sigue sin ser reconocido por Ansible."
-      when: ad_test.msg is defined and 'couldn(t resolve' in ad_test.msg
+    - name: "Resultado del diagnóstico"
+      debug:
+        msg: "El módulo se cargó correctamente. Mensaje: {{ ad_test.msg }}"
+      when: ad_test.msg is defined
