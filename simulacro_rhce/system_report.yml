@@ -1,0 +1,18 @@
+---
+- name: Uso de templates
+  hosts: all
+
+  tasks:
+    - name: Envío de mensaje por plantilla j2
+      ansible.builtin.template:
+        src: info.j2
+        dest: /etc/server_info
+      notify: restart sshd
+
+  handlers:
+    - name: restart sshd
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
+
+

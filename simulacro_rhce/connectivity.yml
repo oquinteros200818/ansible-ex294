@@ -1,0 +1,17 @@
+---
+- name: Verificar conectividad y crear archivo de control
+  hosts: node1
+  gather_facts: no
+
+  tasks:
+
+    - name: Intentar descargar archivo (no debe fallar)
+      ansible.builtin.get_url:
+        url: http://servidor-inexistente.com/file.txt
+        dest: /tmp/file.txt
+      ignore_errors: yes
+
+    - name: Crear archivo de verificación siempre
+      ansible.builtin.file:
+        path: /tmp/check_complete
+        state: touch

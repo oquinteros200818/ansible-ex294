@@ -1,0 +1,30 @@
+---
+- name: Manejo de particiones
+  hosts: database
+
+  tasks:
+    - name: Almacenamiento y formato (LVM)
+      community.general.parted:
+        device: /dev/sdb
+        number: 1 
+        flahs: lvm
+        state: present
+
+    - name: Manejo de grupo
+      community.general.lvg:
+        vg: vg_projects
+        pvs: /dev/sdb1
+
+    - name: Manejo de volúmenes
+      community.general.lvol:
+        vg: vg_projects
+        lv: lv_data
+        size: 400M
+
+    - name: Formatear el LVM creado
+      community.general.filesystem:
+        path: /mnt/data
+        fstype: ext4
+        dev: dev/vg_projects/lv_data 
+        state: mounted 
+

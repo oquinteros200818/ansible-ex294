@@ -1,0 +1,13 @@
+---
+- name: Play que utiliza un ansible vault
+  hosts: all
+
+  tasks:
+    - name: Crear un usuario 'sec_audit'
+      ansible.builtin.user:
+        name: sec_audit
+        password: "{{ admin_pass | password_hash('sha512') }}"
+        state: present
+
+
+

@@ -1,0 +1,39 @@
+---
+- name: Playbook que maneja particiones
+  hosts: database
+  become: true
+
+  tasks:
+    - name: Play verifica si está disponible un disco "/dev/sdb"
+      community.general.parted:
+        device: /dev/sdb
+        number: 1
+        flags: lvm
+        state: present
+        part_end: 1GiB
+
+    - name: Play para crear un grupo de volumenes a partir del disco existente
+      community.general.lvg:
+        vg: vg_data
+        pvs: /dev/sdb1
+
+    - name: Play para crea un volumen lógico a partir del grupo de volúmenes
+      community.general.lvol:
+        vg: vg_data
+        lv: lv_db
+        size: 500M
+
+    - name: formatea el volumen lógico creado
+      community.general.filesystem:
+        fstype: xfs
+        dev: /dev/vg_data/lv_db 
+
+    - name: Play para correr una tarea programada
+      ansible.builtin.cron:
+        name: "Limpieza temporal"
+        weekday: "0"
+        hour: "3"
+        minute: "0"
+        job: "rm -rf /tmp/old_files/*"
+
+      
