@@ -2,10 +2,8 @@
 - name: "Validación Final de EE"
   hosts: localhost
   gather_facts: false
-  # Quitamos la sección 'collections' de aquí arriba para evitar errores de carga previa
   tasks:
     - name: "Probando módulo de Microsoft AD"
-      # Usamos el nombre completo (FQCN)
       microsoft.ad.domain_info:
       register: ad_test
       ignore_errors: true
