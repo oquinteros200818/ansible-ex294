@@ -7,7 +7,6 @@
       microsoft.ad.object_info:
         filter: ObjectClass -eq 'user'
       register: resultado
-      ignore_errors: true
 
     - name: "Mostrar diagnóstico"
       debug:
