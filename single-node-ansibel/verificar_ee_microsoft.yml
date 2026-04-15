@@ -1,14 +1,14 @@
 ---
-- name: "Validación Final de EE"
+- name: "Prueba con object_info"
   hosts: localhost
   gather_facts: false
   tasks:
-    - name: "Probando módulo de Microsoft AD"
-      microsoft.ad.domain_info:
-      register: ad_test
+    - name: "Buscando objetos (esto validará si la colección carga)"
+      microsoft.ad.object_info:
+        filter: ObjectClass -eq 'user'
+      register: resultado
       ignore_errors: true
 
-    - name: "Resultado del diagnóstico"
+    - name: "Mostrar diagnóstico"
       debug:
-        msg: "El módulo se cargó correctamente. Mensaje: {{ ad_test.msg }}"
-      when: ad_test.msg is defined
+        msg: "Si ves este mensaje, la colección SÍ cargó. Error esperado: {{ resultado.msg }}"
